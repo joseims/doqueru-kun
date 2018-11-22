@@ -33,3 +33,5 @@ Dessas features as coisas que diferem do tutorial original são:
 :snail: : Criar uma página na wikipedia sobre containers  
 :snail: : Comunicação  
 :snail: : Permitir controle de disco  
+
+https://yarchive.net/comp/linux/pivot_root.html
