@@ -39,3 +39,4 @@ Dessas features as coisas que diferem do tutorial original são:
 
 https://yarchive.net/comp/linux/pivot_root.html
 https://lists.gnu.org/archive/html/guix-commits/2015-06/msg00047.html
+https://news.ycombinator.com/item?id=11558364
