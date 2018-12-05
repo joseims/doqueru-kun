@@ -38,3 +38,4 @@ Dessas features as coisas que diferem do tutorial original são:
 :snail: : Limitar/bloquear systemcalls
 
 https://yarchive.net/comp/linux/pivot_root.html
+https://lists.gnu.org/archive/html/guix-commits/2015-06/msg00047.html
