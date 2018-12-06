@@ -145,14 +145,17 @@ void fork_and_exec_env_unshareutspid_chdir(char** argv) {
 void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
   int* status;
   pid_t pid;
-  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID;
+  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWUNS;
   if ((pid = fork()) == 0) {
     setup_new_env();
-	safe_unshare(uns_flags);
-	safe_sethostname();
-	//remember alpine
-	chroot(MOUNT_DIR);
-  	chdir("/");
+  	safe_unshare(uns_flags);
+  	safe_sethostname();
+    string old_mount = MOUNT_DIR+"/old_mount";
+  	mkdir(old_mount,S_IRWXU);
+    pivot_root(MOUNT_DIR,old_mount);
+    chdir("/");
+    unmount2(old_mount,MNT_DETACH);
+    rmdir(old_mount);
     execvp("./hello_worldo", argv+1);
   }
   wait(status);
@@ -164,6 +167,6 @@ void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
 
 
 int main(int argc, char** argv) {
-  fork_and_exec_env_unshareutspid_chdir(argv);
+  fork_and_exec_env_unshareutspid_chdir_pivot(argv);
   return 0;
 }
