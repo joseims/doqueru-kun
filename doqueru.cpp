@@ -145,7 +145,7 @@ void fork_and_exec_env_unshareutspid_chdir(char** argv) {
 void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
   int* status;
   pid_t pid;
-  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWUNS;
+  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWNS;
   if ((pid = fork()) == 0) {
     setup_new_env();
   	safe_unshare(uns_flags);
