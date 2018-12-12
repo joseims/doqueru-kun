@@ -19,13 +19,64 @@ char MOUNT_DIR[] = "./doquerinhos_shell";	//checar pronuncia
 #define _GNU_SOURCE
 #endif
 
+//ps fc pra visualizar
+void fork_demostration() {
+  pid_t pid;
+  pid = fork();
+
+  if (pid == 0) {
+    printf("Hello !! ( child ) \n");
+  } else {
+    printf("Hello, World! ( parent ) \n");
+  }
+}
+
+void updated_fork() {
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    printf("Hello !! ( child ) \n");
+  }
+  printf("Hello, World! ( parent ) \n");
+}
+
+void exec_demo(char** argv) {
+  execvp("./hello_worldo", argv+1);
+}
+
+void fork_and_exec(char** argv) {
+  int* status;
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    execvp("./hello_worldo", argv+1);
+  }
+  wait(status);
+  printf("===============\n");
+  printf("Now the father! My child has gone :(\n");
+  printf("===============\n");
+  execvp("./hello_worldo", argv+1);
+}
+
+
+void fork_and_exec_env(char** argv) {
+  int* status;
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    clearenv();
+    execvp("./hello_worldo", argv+1);
+  }
+  wait(status);
+  printf("===============\n");
+  printf("Now the father!\n");
+  printf("===============\n");
+  execvp("./hello_worldo", argv+1);
+}
 
 void safe_unshare(int flags) {
 	if (0 == unshare(flags)) {
 		printf("unshare worked!\n");
 	} else {
 		printf("unshare has failed! :( [errno=%d]\n", errno);
-		exit(1);
+    exit(1);
 	}
 }
 
@@ -35,10 +86,45 @@ void safe_sethostname() {
 		printf("sethostname worked!\n");
 	} else {
 		printf("sethostname has failed! :( [errno=%d]\n", errno);
-		exit(1);
+    exit(1);
 	}
 }
 
+void fork_and_exec_env_unshareuts(char** argv) {
+  int* status;
+  pid_t pid;
+  int uns_flags = CLONE_NEWUTS;
+  if ((pid = fork()) == 0) {
+    clearenv();
+	safe_unshare(uns_flags);
+	safe_sethostname();
+    execvp("./hello_worldo", argv+1);
+  }
+  wait(status);
+  printf("===============\n");
+  printf("Now the father!\n");
+  printf("===============\n");
+  execvp("./hello_worldo", argv+1);
+}
+
+void fork_and_exec_env_unshareutspid(char** argv) {
+  int* status;
+  pid_t pid;
+  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID;
+  if ((pid = fork()) == 0) {
+    clearenv();
+	safe_unshare(uns_flags);
+	safe_sethostname();
+    execvp("./hello_worldo", argv+1);
+  }
+  wait(status);
+  printf("===============\n");
+  printf("Now the father!\n");
+  printf("===============\n");
+  execvp("./hello_worldo", argv+1);
+}
+
+void download_alpine();
 
 void setup_new_env() {
   clearenv();
@@ -46,8 +132,27 @@ void setup_new_env() {
   setenv("PATH", "/bin/:/sbin/:usr/bin:/usr/sbin", 0);	//remember to explain paths
 }
 
-#define pivot_root(new_root, put_old) syscall(SYS_pivot_root, new_root, put_old)
+void fork_and_exec_env_unshareutspid_chdir(char** argv) {
+  int* status;
+  pid_t pid;
+  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID;
+  if ((pid = fork()) == 0) {
+    setup_new_env();
+	safe_unshare(uns_flags);
+	safe_sethostname();
+	//remember alpine
+	chroot(MOUNT_DIR);
+  	chdir("/");
+    execvp("./hello_worldo", argv+1);
+  }
+  wait(status);
+  printf("===============\n");
+  printf("Now the father!\n");
+  printf("===============\n");
+  execvp("./hello_worldo", argv+1);
+}
 
+#define pivot_root(new_root, put_old) syscall(SYS_pivot_root, new_root, put_old)
 
 void ls() {
   int status;
@@ -65,25 +170,12 @@ void pwd() {
   printf("pwd: %s\n", cwd);
 }
 
+#define TRY(x) if (x) fatal_errno(__LINE__)
 
 void fatal_errno(int line)
 {
    printf("error at line %d, errno=%d\n", line, errno);
    exit(1);
-}
-
-#define TRY(x) if (x) fatal_errno(__LINE__)
-
-int copy(char source[], char dest[]) {
-  char c[1024];
-  strcpy(c,"");
-  strcat(c,"cp -r ");
-  strcat(c,source);
-  strcat(c,"/* ");
-  strcat(c," ");
-  strcat(c,dest);
-  printf("%s\n",c );
-  return system(c);
 }
 
 void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
@@ -99,6 +191,7 @@ void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
     /* Enter the mount and user namespaces. Note that in some cases (e.g., RHEL
        6.8), this will succeed even though the userns is not created. In that
        case, the following mount(2) will fail with EPERM. */
+    TRY (unshare(CLONE_NEWNS|CLONE_NEWUSER));
 
 
 
@@ -106,11 +199,6 @@ void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
        in it. */
     if (mkdir("/tmp/newroot", 0755) && errno != EEXIST)
        TRY (errno);
-
-       ls();
-    int a = copy("/home/dokeru/workspace/doqueru-kun/doquerinhos_shell","/tmp/newroot");
-		printf("copy return(%d) errno(%d)\n",a,errno );
-
 
 
     /* Claim the image for our namespace by recursively bind-mounting it over
