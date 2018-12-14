@@ -1,15 +1,23 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/syscall.h>
+#include <sys/mount.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <sched.h>
+#include <string>
 #include <string.h>
 
 using namespace std;
 
-#define MOUNT_DIR "./doquerinho's_shell"	//checar pronuncia
+char MOUNT_DIR[] = "./doquerinhos_shell";	//checar pronuncia
+
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 
 //ps fc pra visualizar
 void fork_demostration() {
@@ -142,27 +150,73 @@ void fork_and_exec_env_unshareutspid_chdir(char** argv) {
   execvp("./hello_worldo", argv+1);
 }
 
+#define pivot_root(new_root, put_old) syscall(SYS_pivot_root, new_root, put_old)
+
+void ls() {
+  int status;
+  if (fork() == 0) {
+    char* args_ls[] = {"./doquerinhos_shell/bin/ls", "-la", NULL};
+    execv(args_ls[0], args_ls);
+    printf("%s %s exited with errorno=%d\n", args_ls[0], args_ls[1], errno);
+  }
+  wait(&status);
+}
+
+void pwd() {
+  char cwd[1024];
+  getcwd(cwd, sizeof cwd);
+  printf("pwd: %s\n", cwd);
+}
+
 void fork_and_exec_env_unshareutspid_chdir_pivot(char** argv) {
-  int* status;
+  int status;
   pid_t pid;
-  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWUNS;
+  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWNS;
+
   if ((pid = fork()) == 0) {
     setup_new_env();
   	safe_unshare(uns_flags);
   	safe_sethostname();
-    string old_mount = MOUNT_DIR+"/old_mount";
-  	mkdir(old_mount,S_IRWXU);
-    pivot_root(MOUNT_DIR,old_mount);
-    chdir("/");
-    unmount2(old_mount,MNT_DETACH);
+
+    if (0 != chdir(MOUNT_DIR)){
+      printf("chdir errno=%d\n", errno);
+    }
+    if (0 != chdir("..")) {
+      printf("chdir(..) failed with errno=%d\n", errno);
+    }
+    pwd();
+    ls();
+    char old_mount[100];
+    {
+      strcpy(old_mount, MOUNT_DIR);
+      strcat(old_mount, "/old_mount");
+    }
+  	if (0 != mkdir(old_mount, 0755)) {
+      printf("mkdir(%s) failed with errno=%d\n", old_mount, errno);
+    }
+    if (0 != mount(MOUNT_DIR, MOUNT_DIR, NULL, MS_REC | MS_BIND | MS_PRIVATE, NULL)) {
+      printf("mount(%s) failed with errno=%d\n", MOUNT_DIR, errno);
+    }
+
+    if (0 != pivot_root(MOUNT_DIR, old_mount)) {
+      printf("pivot_root(%s, %s) failed with errno=%d\n", MOUNT_DIR, old_mount, errno);
+    }
+    chroot(".");
+    chdir(MOUNT_DIR);
+    umount2(old_mount,MNT_DETACH);
     rmdir(old_mount);
-    execvp("./hello_worldo", argv+1);
+
+    printf("===============\n");
+    printf("Running child! pid[%d]\n", pid);
+    execvp("/bin/hello_worldo", argv + 1);
+    printf("child keep running error[%d]\n", errno);
+    exit(1);
   }
-  wait(status);
+  wait(&status);
   printf("===============\n");
-  printf("Now the father!\n");
+  printf("Now the father! pid[%d]\n", pid);
   printf("===============\n");
-  execvp("./hello_worldo", argv+1);
+  execvp("./hello_worldo", argv + 1);
 }
 
 
