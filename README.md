@@ -37,6 +37,13 @@ Dessas features as coisas que diferem do tutorial original são:
 :snail: : Permitir controle de disco  
 :snail: : Limitar/bloquear systemcalls
 
+
+
+
+## Oops!
+- Quando dá `unshare -m` seguido de um `exit` 
+
+
 https://yarchive.net/comp/linux/pivot_root.html
 https://lists.gnu.org/archive/html/guix-commits/2015-06/msg00047.html
 https://news.ycombinator.com/item?id=11558364
