@@ -1,0 +1,372 @@
+Package: libcuda1-304
+Description-md5: 6cd8a29ce828440044bf16ef76348773
+Description-en: NVIDIA CUDA runtime library
+ The Compute Unified Device Architecture (CUDA) enables NVIDIA
+ graphics processing units (GPUs) to be used for massively parallel
+ general purpose computation.
+ .
+ This package contains the driver specific runtime library.
+ .
+ Supported NVIDIA devices include GPUs starting from GeForce 8 and Quadro FX
+ series, as well as the Tesla computing processors.
+
+Package: libcuda1-304-updates
+Description-md5: 24b6cbcfc890736fb75fc3f9bdab5784
+Description-en: Transitional package for libcuda1-304
+ This is a transitional package for libcuda1-304, and can be
+ safely removed after the installation is complete.
+
+Package: libcuda1-340
+Description-md5: 6cd8a29ce828440044bf16ef76348773
+Description-en: NVIDIA CUDA runtime library
+ The Compute Unified Device Architecture (CUDA) enables NVIDIA
+ graphics processing units (GPUs) to be used for massively parallel
+ general purpose computation.
+ .
+ This package contains the driver specific runtime library.
+ .
+ Supported NVIDIA devices include GPUs starting from GeForce 8 and Quadro FX
+ series, as well as the Tesla computing processors.
+
+Package: libcuda1-361
+Description-md5: 021d67863e0b6025c92b16c60aeffe95
+Description-en: Transitional package for libcuda1-367
+ This is a transitional package for libcuda1-367, and can be
+ safely removed after the installation is complete.
+
+Package: libcuda1-367
+Description-md5: 084f3742e4f1b51c41e1434a3865e6c3
+Description-en: Transitional package for libcuda1-375
+ This is a transitional package for libcuda1-375, and can be
+ safely removed after the installation is complete.
+
+Package: libcuda1-384
+Description-md5: 6cd8a29ce828440044bf16ef76348773
+Description-en: NVIDIA CUDA runtime library
+ The Compute Unified Device Architecture (CUDA) enables NVIDIA
+ graphics processing units (GPUs) to be used for massively parallel
+ general purpose computation.
+ .
+ This package contains the driver specific runtime library.
+ .
+ Supported NVIDIA devices include GPUs starting from GeForce 8 and Quadro FX
+ series, as well as the Tesla computing processors.
+
+Package: nvidia-304
+Description-md5: e573713e26a0efc34ab2cfa2ed752b3f
+Description-en: NVIDIA legacy binary driver - version 304.135
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ GPUs such as GeForce series 6 or newer are supported.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-amd64-304.135-driver.html
+
+Package: nvidia-304-dev
+Description-md5: ef3b76d980ecacaf3116114549ba70ca
+Description-en: NVIDIA binary Xorg driver development files
+ This package contains the NVIDIA binary Xorg driver
+ development files.
+ .
+ For more information on this source package visit NVIDIA's homepage
+ at http://www.nvidia.com/ .
+
+Package: nvidia-304-updates
+Description-md5: 80dff7be96e361eaaf789a119a8cf4df
+Description-en: Transitional package for nvidia-304
+ This is a transitional package for nvidia-304, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-304-updates-dev
+Description-md5: 8c25ece4f30408afdfd9848d8d5cba39
+Description-en: Transitional package for nvidia-304-dev
+ This is a transitional package for nvidia-304-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-331
+Description-md5: 3612f7cb365b0b5804f0fb129ccb1c2c
+Description-en: Transitional package for nvidia-331
+ This is a transitional package for nvidia-331, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-331-dev
+Description-md5: 6c98e0772fd230780190db0e8cbb108c
+Description-en: Transitional package for nvidia-340-dev
+ This is a transitional package for nvidia-340-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-331-updates
+Description-md5: 57112f542d553ab72039643ae9695ee9
+Description-en: Transitional package for nvidia-340
+ This is a transitional package for nvidia-340, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-331-updates-dev
+Description-md5: 6c98e0772fd230780190db0e8cbb108c
+Description-en: Transitional package for nvidia-340-dev
+ This is a transitional package for nvidia-340-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-331-updates-uvm
+Description-md5: 57112f542d553ab72039643ae9695ee9
+Description-en: Transitional package for nvidia-340
+ This is a transitional package for nvidia-340, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-331-uvm
+Description-md5: 57112f542d553ab72039643ae9695ee9
+Description-en: Transitional package for nvidia-340
+ This is a transitional package for nvidia-340, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-340
+Description-md5: 80635b354b73ba6f91ba19584d17cf0d
+Description-en: NVIDIA binary driver - version 340.102
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-amd64-340.102-driver.html
+
+Package: nvidia-340-dev
+Description-md5: ef3b76d980ecacaf3116114549ba70ca
+Description-en: NVIDIA binary Xorg driver development files
+ This package contains the NVIDIA binary Xorg driver
+ development files.
+ .
+ For more information on this source package visit NVIDIA's homepage
+ at http://www.nvidia.com/ .
+
+Package: nvidia-340-updates
+Description-md5: 57112f542d553ab72039643ae9695ee9
+Description-en: Transitional package for nvidia-340
+ This is a transitional package for nvidia-340, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-340-updates-dev
+Description-md5: 6c98e0772fd230780190db0e8cbb108c
+Description-en: Transitional package for nvidia-340-dev
+ This is a transitional package for nvidia-340-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-340-uvm
+Description-md5: 6150dcc587e7591e1163978c48a23ab4
+Description-en: Transitional package for nvidia-340
+ This is a transitional package for nvidia-340.
+
+Package: nvidia-361
+Description-md5: 9adf2bbcdedc35853779040864865818
+Description-en: Transitional package for nvidia-367
+ This is a transitional package for nvidia-367, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-361-dev
+Description-md5: 712d8515f074a3a97df4bcbd8b18a10a
+Description-en: Transitional package for nvidia-367-dev
+ This is a transitional package for nvidia-367-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-367
+Description-md5: 9e0e59c93b4df26deb06747b14fe9df1
+Description-en: Transitional package for nvidia-375
+ This is a transitional package for nvidia-375, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-367-dev
+Description-md5: f8fdf714b8418fe46888412848652208
+Description-en: Transitional package for nvidia-375-dev
+ This is a transitional package for nvidia-375-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-375
+Description-md5: 798775fb70a23246b40ee86e6e462742
+Description-en: Transitional package for nvidia-384
+ This is a transitional package for nvidia-384, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-375-dev
+Description-md5: 5dd544e045bb465dfa9a21327385c98b
+Description-en: Transitional package for nvidia-384-dev
+ This is a transitional package for nvidia-384-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-384
+Description-md5: 394b0df42c03f22c7ecea0d7134bec61
+Description-en: NVIDIA binary driver - version 384.130
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-amd64-384.130-driver.html
+
+Package: nvidia-384-dev
+Description-md5: ef3b76d980ecacaf3116114549ba70ca
+Description-en: NVIDIA binary Xorg driver development files
+ This package contains the NVIDIA binary Xorg driver
+ development files.
+ .
+ For more information on this source package visit NVIDIA's homepage
+ at http://www.nvidia.com/ .
+
+Package: nvidia-current
+Description-md5: cfae43419e26e7ddd43b755f8d4bc71a
+Description-en: Transitional package for nvidia-current
+ This is a transitional package for nvidia-current, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-current-dev
+Description-md5: d7f80b7df0e8d90395b8393509321e23
+Description-en: Transitional package for nvidia-current-dev
+ This is a transitional package for nvidia-current-dev, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-libopencl1-367
+Description-md5: ca29c96a34b6d9208ae933195156e109
+Description-en: Transitional package for nvidia-libopencl1-375
+ This is a transitional package for nvidia-libopencl1-375, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-opencl-icd-304
+Description-md5: a9c59351040d333e50f4a411fc913d8e
+Description-en: NVIDIA OpenCL ICD
+ OpenCL (Open Computing Language) is a multivendor open standard for
+ general-purpose parallel programming of heterogeneous systems that include
+ CPUs, GPUs and other processors.
+ .
+ This package provides the NVIDIA installable client driver (ICD) for OpenCL
+ which supports NVIDIA GPUs.
+
+Package: nvidia-opencl-icd-304-updates
+Description-md5: 3fca2349eb59914f9dbc872768541d01
+Description-en: Transitional package for nvidia-opencl-icd-304
+ This is a transitional package for nvidia-opencl-icd-304, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-opencl-icd-340
+Description-md5: a9c59351040d333e50f4a411fc913d8e
+Description-en: NVIDIA OpenCL ICD
+ OpenCL (Open Computing Language) is a multivendor open standard for
+ general-purpose parallel programming of heterogeneous systems that include
+ CPUs, GPUs and other processors.
+ .
+ This package provides the NVIDIA installable client driver (ICD) for OpenCL
+ which supports NVIDIA GPUs.
+
+Package: nvidia-opencl-icd-361
+Description-md5: 4b62e5d08fc8aab0ac0d44226c362a3d
+Description-en: Transitional package for nvidia-opencl-icd-367
+ This is a transitional package for nvidia-opencl-icd-367, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-opencl-icd-367
+Description-md5: ea8da607bb67ba132012d762ba1a7725
+Description-en: Transitional package for nvidia-opencl-icd-375
+ This is a transitional package for nvidia-opencl-icd-375, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-opencl-icd-384
+Description-md5: a9c59351040d333e50f4a411fc913d8e
+Description-en: NVIDIA OpenCL ICD
+ OpenCL (Open Computing Language) is a multivendor open standard for
+ general-purpose parallel programming of heterogeneous systems that include
+ CPUs, GPUs and other processors.
+ .
+ This package provides the NVIDIA installable client driver (ICD) for OpenCL
+ which supports NVIDIA GPUs.
+
+Package: nvidia-340
+Description-md5: 799c2721fb542d4478fdbc19901a8f31
+Description-en: NVIDIA binary driver - version 340.102
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-32bit-arm-340.102-driver.html
+
+Package: nvidia-384
+Description-md5: e45360b21384c78fb2cc20e9f41119c3
+Description-en: NVIDIA binary driver - version 384.130
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-32bit-arm-384.130-driver.html
+
+Package: nvidia-304
+Description-md5: 739913c44c8fc8112c32425f606607c8
+Description-en: NVIDIA legacy binary driver - version 304.135
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ GPUs such as GeForce series 6 or newer are supported.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-ia32-304.135-driver.html
+
+Package: nvidia-340
+Description-md5: 7c869de683c86dc737a1285133f5f13c
+Description-en: NVIDIA binary driver - version 340.102
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-ia32-340.102-driver.html
+
+Package: nvidia-384
+Description-md5: 1a50a24145b3fe182b29e774bdbfd6e4
+Description-en: NVIDIA binary driver - version 384.130
+ The binary driver provide optimized hardware acceleration of OpenGL
+ applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
+ and flat panel displays are also supported.
+ .
+ This package also includes the source for building the kernel module
+ required by the Xorg driver, and provides NVIDIA's implementation of
+ the Video Decode and presentation API. The latter enables acceleration
+ for GeForce 8 and later series cards for h264 video.
+ .
+ Release Notes and supported GPUs:
+ http://www.nvidia.com/object/linux-display-ia32-384.130-driver.html
+

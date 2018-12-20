@@ -1,0 +1,6 @@
+TARGETS = sendsigs hwclock.sh urandom umountnfs.sh umountfs umountroot halt reboot
+umountnfs.sh: sendsigs
+umountfs: hwclock.sh urandom umountnfs.sh
+umountroot: umountfs
+halt: umountroot
+reboot: umountroot
