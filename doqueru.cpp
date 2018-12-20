@@ -88,18 +88,18 @@ int copy(char source[], char dest[]) {
 
 void doqueru(char** argv) {
   int status;
-  pid_t pid;
+  pid_t pid_dad,pid_grandad;
   int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWNS;
 
-   if ((pid = fork()) == 0) {
+   if ((pid_dad = fork()) == 0) { // AVO PARA O PID FUNCIONAR
       setup_new_env();
       safe_unshare(uns_flags);
       safe_sethostname();
-
+      if (pid_grandad = fork() == 0) {
       TRY(mount("none", "/", NULL, MS_REC|MS_PRIVATE, NULL));
 
       TRY(mount(MOUNT_DIR, MOUNT_DIR, NULL,
-                  MS_BIND | MS_PRIVATE, NULL));
+                  MS_BIND | MS_PRIVATE | MS_REC, NULL));
 
       chdir(MOUNT_DIR);
 
@@ -110,9 +110,11 @@ void doqueru(char** argv) {
 
       TRY(pivot_root(".", "./oldroot"));
 
+ 
+
 
       //MOUNT PROC ETC
-      TRY(mount("proc","./proc","proc",NULL,NULL));
+      TRY(mount("proc","/proc","proc",NULL,NULL));
 
 
       /* Unmount the old filesystem and it's gone for good. */
@@ -120,13 +122,20 @@ void doqueru(char** argv) {
       rmdir("./oldroot");
 
         printf("===============\n");
-        printf("Running child! pid[%d]\n", pid);
-        TRY(execvp("/bin/sh", argv + 1));
-        printf("child keep running error[%d]\n", errno);
+        printf("Running child! pid[%d]\n", pid_grandad);
+
+        int a = system("/bin/sh");
+        if ( -1 != a) {
+          printf("child keep running error[%d]\n", errno);
+        }
+   exit(1);
+   }
+   wait(&status); 
+   exit(1);
    }
   wait(&status);
   printf("===============\n");
-  printf("Now the father! pid[%d]\n", pid);
+  printf("Now the father! pid[%d]\n", pid_dad);
   printf("===============\n");
   execvp("./hello_worldo", argv + 1);
 }
