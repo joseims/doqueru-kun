@@ -10,6 +10,8 @@
 #include <sched.h>
 #include <string>
 #include <string.h>
+#include <fcntl.h>
+#include <map>
 
 using namespace std;
 
@@ -73,13 +75,13 @@ void pwd() {
   printf("pwd: %s\n", cwd);
 }
 
-void procs_needed() {
-  if(mount("proc","/proc","proc",NULL,NULL)) {
-    error("proc mount");
-  }
-  if(mount("sysfs","/sys","sysfs",NULL,NULL)) {
-    error("sysfs mount");
-  }
+void mount_proc() {
+    if (mkdir("/proc", 0755) && errno != EEXIST) {
+        error("create /proc");
+    }
+    if(mount("proc","/proc","proc",NULL,NULL)) {
+        error("proc mount");
+    }
 }
 
 
@@ -129,17 +131,80 @@ inline long cpu_quota(unsigned long period, unsigned long quota_percent, unsigne
     return (period * quota_percent * cpus) / 100;
 }
 
+struct rule {
+    string path;
+    string name;
+    string value;
+    string controller;
+};
+
+void cgroup_rule(const char path[], const char rule_name[], const char rule_value[]) {
+    char full_path[256];
+    strcpy(full_path, path);
+    strcat(full_path, rule_name);
+    printf("%s = %s\n", full_path, rule_value);
+
+    int fd = open(full_path, O_CREAT | O_WRONLY | O_TRUNC);
+    if (!write(fd, rule_value, strlen(rule_value))) {
+        error("write rule fail");
+    }
+    close(fd);
+
+    strcpy(full_path, path);
+    strcat(full_path, "cgroup.procs");
+    printf("%s\n", full_path);
+
+    if ((fd = open(full_path, O_CREAT | O_WRONLY | O_APPEND)) < 0) {
+        error("opening cgroup.procs");
+    }
+    if (!write(fd, "0", strlen("0"))) {
+        error("registering groups fail");
+    }
+    close(fd);
+}
+
+void cgroup(const char name[], const rule* configs, size_t configs_len) {
+    ASSERT(name[strlen(name) - 1] == '/');  // just to not mess up when concatening
+
+    for (int i=0; i < configs_len; i++) {
+        char path[200] = "/sys/fs/cgroup/";
+        strcat(path, configs[i].controller.c_str());
+        strcat(path, configs[i].path.c_str());
+
+        if (mkdir(path, 0755) && errno != EEXIST) {
+            printf("%s\n", path);
+            error("create /cgroup");
+        }
+
+        cgroup_rule(path, configs[i].name.c_str(), configs[i].value.c_str());
+    }
+}
+
+string from_cstr(const char word[]) {
+    string out = word;
+    return out;
+}
+
 void config(size_t argc, char** argv) {
+    char cgroup_name[]   = "doquerinho/";
     unsigned long cpu_shares   = DEFAULT_CPU_SHARES;
     unsigned long cpu_period   = DEFAULT_CPU_PERIOD;
     unsigned long cpu_percent  = DEFAULT_CPU_QUOTA_PERCENT;
     unsigned long cpu_cpus     = DEFAULT_CPU_QUOTA_CPUS;
 
+    unsigned long mem_max      = 0;
+
+    rule configs[20];
+
+    int c = 0;
+    const char* temp;
     for (size_t i=1; i < argc; i++) {
+        configs[c].path = from_cstr(cgroup_name);
         if (!strcmp(argv[i], "--shares"))
         {
             cpu_shares = strtoul(argv[++i], NULL, 0);
             ASSERT(cpu_shares > 0);
+
             printf("CPU_SHARES is set to %lu\n", cpu_shares);
         }
         else if (!strcmp(argv[i], "--period"))
@@ -160,6 +225,17 @@ void config(size_t argc, char** argv) {
             ASSERT(cpu_percent > 0);
             printf("CPU_CPUS is set to %lu\n", cpu_cpus);
         }
+        else if (!strcmp(argv[i], "--memlimit"))
+        {
+            ASSERT(cpu_percent > 0);
+            temp = argv[++i];
+            configs[c].name = "memory.kmem.limit_in_bytes";
+            configs[c].value = from_cstr(temp);
+            configs[c++].controller = "memory/";
+            mem_max = strtoul(temp, NULL, 0);
+            printf("after\n");
+            printf("MEM_MAX is set to %lu\n", mem_max);
+        }
         else
         {
             printf("%s is not a valid configuration. See --help\n", argv[i]);
@@ -167,10 +243,7 @@ void config(size_t argc, char** argv) {
         }
     }
 
-    char command[200];
-
-    system("mkdir /sys/fs/cgroup/doquerinho");
-    system("mount -t cgroup -o cpu none /sys/fs/cgroup/doquerinho");
+    cgroup(cgroup_name, configs, c);
 }
 
 void doqueru(int argc, char** argv) {
@@ -184,14 +257,14 @@ void doqueru(int argc, char** argv) {
     safe_sethostname();
 
     if (mount("none", "/", NULL, MS_REC|MS_PRIVATE, NULL)) { // This must happen, otherwise the unshare Mount namespace wont work properly
-      error("mount for unshare");
+        error("mount for unshare");
     }
 
-
     pivot_root_routine();
-    mount_proc();// Verify if another stuff should be mounted too
 
     if ((pid_proc0 = fork()) == 0) {  // PID = 1
+        mount_proc();// Verify if another stuff should be mounted too
+
         char COMMAND_TO_EXECUTE[] = "/bin/bash";
         char* COMMAND_ARGS[2] = {COMMAND_TO_EXECUTE, NULL};
         if (fork() == 0) {
@@ -208,6 +281,6 @@ void doqueru(int argc, char** argv) {
 
 
 int main(int argc, char** argv) {
-  doqueru(argc, argv);
-  return 0;
+    doqueru(argc, argv);
+    return 0;
 }
