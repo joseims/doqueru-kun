@@ -73,25 +73,15 @@ void pwd() {
   printf("pwd: %s\n", cwd);
 }
 
-
-int copy(char source[], char dest[]) {
-  char c[1024];
-  strcpy(c,"");
-  strcat(c,"cp -r ");
-  strcat(c,source);
-  strcat(c,"/* ");
-  strcat(c," ");
-  strcat(c,dest);
-  printf("%s\n",c );
-  return system(c);
-}
-
-
-void mount_proc() {
+void procs_needed() {
   if(mount("proc","/proc","proc",NULL,NULL)) {
     error("proc mount");
   }
+  if(mount("sysfs","/sys","sysfs",NULL,NULL)) {
+    error("sysfs mount");
+  }
 }
+
 
 void pivot_root_routine() {
       if (mount(MOUNT_DIR, MOUNT_DIR, NULL, MS_BIND | MS_PRIVATE | MS_REC, NULL)) {
@@ -119,9 +109,10 @@ void pivot_root_routine() {
 }
 
 void exec(char command[]) {
-    int sys_error = system(command);
-    if ( -1 != sys_error) {
-        error("exec");
+    if (fork() == 0) {
+        if (execvp("/bin/bash",NULL)) {
+            error("exec");
+        }
     }
 }
 
