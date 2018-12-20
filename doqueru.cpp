@@ -144,7 +144,7 @@ void cgroup_rule(const char path[], const char rule_name[], const char rule_valu
     strcat(full_path, rule_name);
     printf("%s = %s\n", full_path, rule_value);
 
-    int fd = open(full_path, O_CREAT | O_WRONLY | O_TRUNC);
+    int fd = open(full_path, O_CREAT | O_WRONLY | O_APPEND);
     if (!write(fd, rule_value, strlen(rule_value))) {
         error("write rule fail");
     }
@@ -199,7 +199,6 @@ void config(size_t argc, char** argv) {
     int c = 0;
     const char* temp;
     for (size_t i=1; i < argc; i++) {
-        configs[c].path = from_cstr(cgroup_name);
         if (!strcmp(argv[i], "--shares"))
         {
             cpu_shares = strtoul(argv[++i], NULL, 0);
@@ -222,18 +221,18 @@ void config(size_t argc, char** argv) {
         else if (!strcmp(argv[i], "--cpus"))
         {
             cpu_cpus = strtoul(argv[++i], NULL, 0);
-            ASSERT(cpu_percent > 0);
+            ASSERT(cpu_cpus > 0);
             printf("CPU_CPUS is set to %lu\n", cpu_cpus);
         }
         else if (!strcmp(argv[i], "--memlimit"))
         {
-            ASSERT(cpu_percent > 0);
             temp = argv[++i];
+            configs[c].path = from_cstr(cgroup_name);
             configs[c].name = "memory.kmem.limit_in_bytes";
             configs[c].value = from_cstr(temp);
             configs[c++].controller = "memory/";
             mem_max = strtoul(temp, NULL, 0);
-            printf("after\n");
+            ASSERT(cpu_percent > 0);
             printf("MEM_MAX is set to %lu\n", mem_max);
         }
         else
@@ -241,6 +240,15 @@ void config(size_t argc, char** argv) {
             printf("%s is not a valid configuration. See --help\n", argv[i]);
             exit(1);
         }
+    }
+
+    {
+      char value[50];
+      sprintf(value, "%lu", cpu_shares);
+      configs[c].path = from_cstr(cgroup_name);
+      configs[c].name = "cpu.shares";
+      configs[c].value = from_cstr(value);
+      configs[c++].controller = "cpu/";
     }
 
     cgroup(cgroup_name, configs, c);
