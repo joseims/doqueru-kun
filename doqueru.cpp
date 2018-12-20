@@ -152,7 +152,7 @@ void cgroup_rule(const char path[], const char rule_name[], const char rule_valu
 
     strcpy(full_path, path);
     strcat(full_path, "cgroup.procs");
-    printf("%s\n", full_path);
+    printf("registered at %s\n", full_path);
 
     if ((fd = open(full_path, O_CREAT | O_WRONLY | O_APPEND)) < 0) {
         error("opening cgroup.procs");
@@ -250,6 +250,23 @@ void config(size_t argc, char** argv) {
       configs[c].value = from_cstr(value);
       configs[c++].controller = "cpu/";
     }
+    {
+      char value[50];
+      sprintf(value, "%lu", (cpu_period / 100) * cpu_percent);
+      configs[c].path = from_cstr(cgroup_name);
+      configs[c].name = "cpu.cfs_period_us";
+      configs[c].value = from_cstr(value);
+      configs[c++].controller = "cpu/";
+    }
+    {
+      char value[50];
+      sprintf(value, "%lu", cpu_quota(cpu_period, cpu_percent, cpu_cpus));
+      configs[c].path = from_cstr(cgroup_name);
+      configs[c].name = "cpu.cfs_quota_us";
+      configs[c].value = from_cstr(value);
+      configs[c++].controller = "cpu/";
+    }
+
 
     cgroup(cgroup_name, configs, c);
 }
