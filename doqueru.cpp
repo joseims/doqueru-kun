@@ -13,29 +13,29 @@
 
 using namespace std;
 
-char MOUNT_DIR[] = "./doquerinhos_shell";	//checar pronuncia
+char MOUNT_DIR[] = "./doquerinhos_shell2";	//checar pronuncia
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 
 
-void safe_unshare(int flags) {
-	if (0 == unshare(flags)) {
-		printf("unshare worked!\n");
-	} else {
-		printf("unshare has failed! :( [errno=%d]\n", errno);
-		exit(1);
+void error(char error_case[]) {
+    printf("Error at %s(%d)\n",error_case,errno);
+    exit(1);
+}
+
+void safe_unshare() {
+  int flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWNS;
+	if (unshare(flags)) {
+      error("unshare");
 	}
 }
 
 void safe_sethostname() {
-	char new_name[] = "carl";
-	if (0 == sethostname(new_name, strlen(new_name))) {
-		printf("sethostname worked!\n");
-	} else {
-		printf("sethostname has failed! :( [errno=%d]\n", errno);
-		exit(1);
+	char new_name[] = "Doquerinho";
+	if (sethostname(new_name, strlen(new_name))) {
+    error("set hostname");
 	}
 }
 
@@ -66,14 +66,6 @@ void pwd() {
 }
 
 
-void fatal_errno(int line)
-{
-   printf("error at line %d, errno=%d\n", line, errno);
-   exit(1);
-}
-
-#define TRY(x) if (x) fatal_errno(__LINE__)
-
 int copy(char source[], char dest[]) {
   char c[1024];
   strcpy(c,"");
@@ -86,58 +78,76 @@ int copy(char source[], char dest[]) {
   return system(c);
 }
 
-void doqueru(char** argv) {
-  int status;
-  pid_t pid_dad,pid_grandad;
-  int uns_flags = CLONE_NEWUTS | CLONE_NEWPID | CLONE_NEWNS;
 
-   if ((pid_dad = fork()) == 0) { // AVO PARA O PID FUNCIONAR
-      setup_new_env();
-      safe_unshare(uns_flags);
-      safe_sethostname();
-      if (pid_grandad = fork() == 0) {
-      TRY(mount("none", "/", NULL, MS_REC|MS_PRIVATE, NULL));
+void mount_proc() {
+  if(mount("proc","/proc","proc",NULL,NULL)) {
+    error("proc mount");
+  }
+}
 
-      TRY(mount(MOUNT_DIR, MOUNT_DIR, NULL,
-                  MS_BIND | MS_PRIVATE | MS_REC, NULL));
+void pivot_root_routine() {
+      if (mount(MOUNT_DIR, MOUNT_DIR, NULL, MS_BIND | MS_PRIVATE | MS_REC, NULL)) {
+        error("new root mount");
+      }
 
       chdir(MOUNT_DIR);
 
       /* Make a place for the old (intermediate) root filesystem to land. */
-      if (mkdir("oldroot", 0755) && errno != EEXIST)
-        TRY (errno);
+      if (mkdir("oldroot", 0755) && errno != EEXIST) {
+        error("create old root");
+      };
 
+      if(pivot_root(".", "./oldroot")) { 
+        error("pivot root");
+      }
 
-      TRY(pivot_root(".", "./oldroot"));
+      if(umount2("./oldroot", MNT_DETACH)) {
+        error("umount old root");
+      }
 
- 
+      if (rmdir("./oldroot")) {
+        error("remove old root");
+      }
+}
 
+void exec(char command[]) {
+  int sys_error = system(command);
+  if ( -1 != sys_error) {
+    error("exec");
+  }
+  
+}
 
-      //MOUNT PROC ETC
-      TRY(mount("proc","/proc","proc",NULL,NULL));
+void config(char** argv) {
+  return;
+}
 
+void doqueru(char** argv) {
+  int status;
+  pid_t pid_proc0,pid_exec;
 
-      /* Unmount the old filesystem and it's gone for good. */
-      TRY (umount2("./oldroot", MNT_DETACH));
-      rmdir("./oldroot");
+  config(argv); //Future
+   if ((pid_proc0 = fork()) == 0) { 
+      setup_new_env();
+      safe_unshare();
+      safe_sethostname();
+      
+      if ((pid_exec = fork()) == 0) {
+        if (mount("none", "/", NULL, MS_REC|MS_PRIVATE, NULL)) { // This must happen, otherwise the unshare Mount namespace wont work properly
+          error("mount for unshare");
+        } 
 
-        printf("===============\n");
-        printf("Running child! pid[%d]\n", pid_grandad);
-
-        int a = system("/bin/sh");
-        if ( -1 != a) {
-          printf("child keep running error[%d]\n", errno);
+        mount_proc();// Verify if another stuff should be mounted too
+        pivot_root_routine();
+        if (execvp("/bin/sh",argv+1)) {
+          error("exec");
         }
-   exit(1);
-   }
+        exit(1);
+      }
    wait(&status); 
    exit(1);
    }
   wait(&status);
-  printf("===============\n");
-  printf("Now the father! pid[%d]\n", pid_dad);
-  printf("===============\n");
-  execvp("./hello_worldo", argv + 1);
 }
 
 
