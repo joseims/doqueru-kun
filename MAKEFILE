@@ -1,6 +1,0 @@
-
-all: doqueru-kun
-hello_worldo: hello_worldo.cpp
-	g++ -std=c++11 hello_worldo.cpp -o hello_worldo
-doqueru-kun: doqueru.cpp hello_worldo
-	g++ -std=c++11 doqueru.cpp -o doqueru-kun

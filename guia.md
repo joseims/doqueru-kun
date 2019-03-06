@@ -19,13 +19,9 @@ It's a project to Thiago ficar feliz
 10. montar/desmontar filesystems
 
 
-
-
 process=/path/to/exe
 clones=5
 pids=5
-
-
 
 
 channels=["broadcast", "hg12mk3gfsd=="]
