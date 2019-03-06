@@ -4,7 +4,7 @@ CPPFLAGS=-std=c++11
 HELLO=hello_worldo
 CONTAINER_CPP=doqueru.cpp
 CONTAINER_EXE=doqueru-kun.exe
-ALL_EXECUTABLES := $(shell find . -name "*.exe")
+ALL_EXECUTABLES := $(shell ls | grep .exe)
 
 NEWROOT=doquerinhos_shell
 STEPS=steps
@@ -24,5 +24,6 @@ $(STEPS):
 	cd $(STEPS) && $(MAKE)
 
 clean:
-	rm $(ALL_EXECUTABLES)
+	rm $(ALL_EXECUTABLES) $(NEWROOT)/$(HELLO).exe
+	cd $(STEPS) && $(MAKE) clean
 
