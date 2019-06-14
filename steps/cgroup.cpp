@@ -33,7 +33,7 @@
 
 #define pivot_root(new_root, put_old) syscall(SYS_pivot_root, new_root, put_old)
 
-const char MOUNT_DIR[] = "./doquerinhos_shell";
+const char MOUNT_DIR[] = "../doquerinhos_shell";
 
 /** 
  * Show error message and exit if condition is false.
