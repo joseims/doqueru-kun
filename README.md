@@ -38,6 +38,23 @@ Dessas features as coisas que diferem do tutorial original são:
 :snail: : Limitar/bloquear systemcalls
 
 
+## CLI  
+As opções em linha de comando são  
+
+:snail: : --shares *CPU_SHARES*
+> define valor de CPU_SHARES  
+
+:snail: : --period *CPU_PERIOD*  
+> define valor de CPU_PERIOD
+
+:snail: : --percent *CPU_PERCENT*  
+> define valor de CPU_PERCENT como um número de 1 a 100
+
+:snail: : --cpus *CPU_CPUS*  
+> define valor de CPU_CPUS
+
+:snail: : --memlimit *MEM_MAX*  
+> define valor de MEM_MAX
 
 
 ## Oops!
