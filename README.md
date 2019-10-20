@@ -38,6 +38,25 @@ Dessas features as coisas que diferem do tutorial original são:
 :snail: : Limitar/bloquear systemcalls
 
 
+## Usage
+
+>dokeru [*OPTION*]...
+>
+>--shares *CPU_SHARES*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+>define valor de CPU_SHARES  
+>--period *CPU_PERIOD*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+>define valor de CPU_PERIOD  
+>--percent *CPU_PERCENT*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+>define valor de CPU_PERCENT como um número de 1 a 100  
+>--cpus *CPU_CPUS*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+>define valor de CPU_CPUS  
+>--memlimit *MEM_MAX*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+>define valor de MEM_MAX  
 
 
 ## Oops!
