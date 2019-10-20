@@ -180,7 +180,7 @@ void config(size_t argc, char** argv) {
             configs[c].value = from_cstr(temp);
             configs[c++].controller = "memory/";
             mem_max = strtoul(temp, NULL, 0);
-            ASSERT(cpu_percent > 0);
+            ASSERT(mem_max > 0);
             printf("MEM_MAX is set to %lu\n", mem_max);
         }
         else
