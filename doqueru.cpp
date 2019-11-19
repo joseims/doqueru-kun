@@ -23,10 +23,10 @@
 
 /**
  * A shortcut to call _assert with the correct line number.
- */ 
+ */
 #define ASSERTMSG(condition, msg) _assert(condition, msg, __LINE__)
 
-/** 
+/**
  * Same as ASSERTMSG, but will use the condition as string to make the error message.
  */
 #define ASSERT(condition) ASSERTMSG(condition, "assert " STRINGIZE(condition) " has failed")
@@ -35,17 +35,17 @@
 
 const char MOUNT_DIR[] = "./doquerinhos_shell";
 
-/** 
+/**
  * Show error message and exit if condition is false.
  * If is_syscall is set to true, will show errno current value.
  */
 bool _assert(bool condition, const char msg_onerror[], int line, bool is_syscall=true) {
     if (!condition) {
         fprintf(stderr, "[%s] on line: %d\n", msg_onerror, line);
-        
+
         if (is_syscall)
             fprintf(stderr, "errno=%d [%s]\n", errno, std::strerror(errno));
-        
+
         exit(1);
     }
     return true;
@@ -114,13 +114,26 @@ void cgroup_rule(const char path[], const char rule_name[], const char rule_valu
     close(fd);
 }
 
+
+bool IsPathExist(const std::string &s) {
+    struct stat buffer;
+    return (stat (s.c_str(), &buffer) == 0);
+}
+
 void cgroup(const char name[], const rule* configs, size_t configs_len) {
     ASSERTMSG(name[strlen(name) - 1] == '/', "last character of cgroup name should be \"/\"");  // just to not mess up when concatening
 
     for (int i=0; i < configs_len; i++) {
         char path[200] = "/sys/fs/cgroup/";
+
+        if (!IsPathExist("/sys/")) mkdir("/sys/", 0755);
+        if (!IsPathExist("/sys/fs/")) mkdir("/sys/fs/", 0755);
+        if (!IsPathExist("/sys/fs/cgroup/")) mkdir("/sys/fs/cgroup/", 0755);
+
         strcat(path, configs[i].controller.c_str());
+        mkdir(path, 0755);
         strcat(path, configs[i].path.c_str());
+        mkdir(path, 0755);
 
         ASSERTMSG(-1 != mkdir(path, 0755) || errno == EEXIST, "error on creating cgroup directory");
 
@@ -131,6 +144,18 @@ void cgroup(const char name[], const rule* configs, size_t configs_len) {
 std::string from_cstr(const char word[]) {
     std::string out = word;
     return out;
+}
+
+int get_execpath_index(int argc, char ** argv) {
+    int i;
+    for(i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "--shares") || !strcmp(argv[i], "--period") || !strcmp(argv[i], "--percent") || !strcmp(argv[i], "--cpus") || !strcmp(argv[i], "--memlimit")) {
+            i++;
+        } else {
+            return i;
+        }
+    }
+    return i;
 }
 
 void config(size_t argc, char** argv) {
@@ -144,9 +169,11 @@ void config(size_t argc, char** argv) {
 
     rule configs[20];
 
+    int execpath_index = get_execpath_index(argc,argv);
+
     int c = 0;
     const char* temp;
-    for (size_t i=1; i < argc; i++) {
+    for (size_t i=1; i < execpath_index; i++) {
         if (!strcmp(argv[i], "--shares"))
         {
             cpu_shares = strtoul(argv[++i], NULL, 0);
@@ -186,7 +213,6 @@ void config(size_t argc, char** argv) {
         else
         {
             printf("%s is not a valid configuration. See --help\n", argv[i]);
-            exit(1);
         }
     }
 
@@ -218,10 +244,12 @@ void config(size_t argc, char** argv) {
     cgroup(cgroup_name, configs, c);
 }
 
-void doqueru(char* exec_path, char** argv) {
+void doqueru(char* exec_path, int argc, char** argv) {
+
     unsharenamespaces();
     pivot_root_routine();
-    
+    config(argc, argv);
+
     pid_t child_pid;
     ASSERTMSG(-1 != (child_pid = fork()), "fork PID 1 has failed");
 
@@ -232,8 +260,8 @@ void doqueru(char* exec_path, char** argv) {
 
         ASSERTMSG(-1 != (child_pid = fork()), "fork PID 2 has failed");
 
-        if (child_pid == 0) ASSERTMSG(-1 != execvp(exec_path, argv), "exec has failed");
-        
+        int execpath_index = get_execpath_index(argc,argv);
+        if (child_pid == 0) ASSERTMSG(-1 != execvp(exec_path, &argv[execpath_index + 1]), "exec has failed");
         while (wait(&status) != -1 || errno != ECHILD);
 
         fprintf(stderr, "init died\n");
@@ -243,6 +271,7 @@ void doqueru(char* exec_path, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    doqueru(argv[1], &argv[1]);
+    char* execpath = argv[get_execpath_index(argc,argv)];
+    doqueru(execpath, argc-1, argv);
     exit(0);
 }
