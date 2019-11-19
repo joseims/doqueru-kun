@@ -125,13 +125,7 @@ void cgroup(const char name[], const rule* configs, size_t configs_len) {
 
     for (int i=0; i < configs_len; i++) {
         char path[200] = "/sys/fs/cgroup/";
-
-        if (!IsPathExist("/sys/")) mkdir("/sys/", 0755);
-        if (!IsPathExist("/sys/fs/")) mkdir("/sys/fs/", 0755);
-        if (!IsPathExist("/sys/fs/cgroup/")) mkdir("/sys/fs/cgroup/", 0755);
-
         strcat(path, configs[i].controller.c_str());
-        mkdir(path, 0755);
         strcat(path, configs[i].path.c_str());
 
         ASSERTMSG(-1 != mkdir(path, 0755) || errno == EEXIST, "error on creating cgroup directory");
