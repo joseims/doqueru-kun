@@ -133,7 +133,6 @@ void cgroup(const char name[], const rule* configs, size_t configs_len) {
         strcat(path, configs[i].controller.c_str());
         mkdir(path, 0755);
         strcat(path, configs[i].path.c_str());
-        mkdir(path, 0755);
 
         ASSERTMSG(-1 != mkdir(path, 0755) || errno == EEXIST, "error on creating cgroup directory");
 
