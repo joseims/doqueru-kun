@@ -1,5 +1,6 @@
 # doqueru-kun :snail:
 
+You can find the article explaining how it work [here](https://itnext.io/linux-container-from-scratch-339c3ba0411d)
 ![Doquerinho, our little, half giant snail half, container friend!](https://github.com/joseims/doqueru-kun/blob/master/images/doquerinho.jpg)
 
 # Proposta  
