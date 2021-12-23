@@ -1,7 +1,8 @@
 # doqueru-kun :snail:
 
-You can find the article explaining how it work [here](https://itnext.io/linux-container-from-scratch-339c3ba0411d)
 ![Doquerinho, our little, half giant snail half, container friend!](https://github.com/joseims/doqueru-kun/blob/master/images/doquerinho.jpg)
+  
+You can find the article explaining how it works [here](https://itnext.io/linux-container-from-scratch-339c3ba0411d)
 
 # Proposta  
 Baseado [neste tutorial](http://cesarvr.github.io/post/2018-05-22-create-containers/?fbclid=IwAR115qJ_sKet0uQM3fJ6u1ALe9JHpEOldX4lE-HWVF_Fm-P0ctf6P9DcHJM) iremos criar nossa própria aplicação para containerização de programas. As features que iremos implementar são essas:
